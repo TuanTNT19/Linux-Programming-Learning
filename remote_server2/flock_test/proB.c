@@ -4,35 +4,47 @@
 #include <sys/file.h>
 #include <unistd.h>
 #include <fcntl.h>
+//#include <Windows.h>>
 int main()
 {
-    char buff[11]={0};
-    char str[11]="Tuan Truong";
-    int fd = open("text.txt",O_RDWR | O_CREAT,0667);
-    if (fd == -1)
+    char buff[11]="Pham Huong\n";
+    char buff2[26]={0};
+    int fd=open("text.txt",O_RDWR | O_CREAT,0667);
+    if (fd ==-1)
     {
-        printf("can not open file text\n");
+        printf("Can not open file text\n");
     }
     else{
-        printf("open file succesfully\n");
+        printf("Open file OK !\n");
     }
-      int r = read(fd,buff,sizeof(buff)-1);
-      if (r==-1)
-      {
-        printf("Can not read file\n");
-      }
-      else{
-        printf("Read OK\n");
-        printf("%s",buff);
-      }
+    int f = flock(fd,LOCK_EX);
+    if (f==-1)
+    {
+        printf("Can not lock EX from B\n");
+    }
+    else{
+        printf("Lock EX ok from B\n");
+    }
     lseek(fd,0,SEEK_SET);
-    int w = write(fd,str,sizeof(str));
+    int w = write(fd,buff,sizeof(buff)-1);
     if (w==-1)
     {
-        printf("Can not write \n");
+        printf("Can not write to file txt\n");
     }
     else{
-        printf("Write OK\n");
+        printf("Write to file txt ok from A\n");
     }
+    lseek(fd,0,SEEK_SET);
+    int r=read(fd,buff2,sizeof(buff2)-1);
+    if (r==-1)
+    {
+      printf("Can not read from B\n");
+    }
+    else{
+      printf("REad from B OK \n");
+      printf("%s\n",buff2);
+    }
+    close(fd);
+    printf("End of process B\n");
     return 0;
 }
