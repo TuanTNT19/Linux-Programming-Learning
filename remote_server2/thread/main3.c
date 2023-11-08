@@ -26,13 +26,14 @@ static void *func1(void *para)
 static void *func2(void *para)
 {
    printf("I am thread 2\n");
-   //int t=4;
-   while(1)
+   int t=5;
+   while(t--)
    {
     printf("Hello Tuan\n");
     sleep(1);
    }
-    //pthread_exit(NULL);
+    pthread_exit(NULL);
+    //exit(1);
 
 }
 int main()
@@ -50,10 +51,13 @@ int main()
     {
         printf("Create thread2\n");
     }
-    sleep(5);
-    pthread_cancel(id2);
-    sleep(2);
-    pthread_cancel(id1);
+   // sleep(5);
+   // pthread_cancel(id2);
+   // sleep(2);
+    //pthread_cancel(id1);
+    //pthread_join(id2,NULL);
+    pthread_detach(id2);
+    printf("OK ??\n");
     while(1);
     return 0;
 }
