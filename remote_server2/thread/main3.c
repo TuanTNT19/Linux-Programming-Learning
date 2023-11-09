@@ -15,6 +15,7 @@ static void *func1(void *para)
     data_check *data = (data_check *)para;
 
     printf("I am thead 1\n");
+   // pthread_join(id2,NULL);
     while(1)
     {
     printf("%s %s\n",data->Idol, data->name);
