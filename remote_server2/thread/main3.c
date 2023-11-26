@@ -27,7 +27,7 @@ static void *func1(void *para)
 static void *func2(void *para)
 {
    printf("I am thread 2\n");
-   int t=5;
+   int t=10;
    while(t--)
    {
     printf("Hello Tuan\n");
@@ -52,12 +52,12 @@ int main()
     {
         printf("Create thread2\n");
     }
-   // sleep(5);
-   // pthread_cancel(id2);
+    sleep(5);
+  //  pthread_cancel(id2);
    // sleep(2);
     //pthread_cancel(id1);
-    //pthread_join(id2,NULL);
-    pthread_detach(id2);
+//    pthread_join(id2,NULL);
+  //  pthread_detach(id2);
     printf("OK ??\n");
     while(1);
     return 0;
