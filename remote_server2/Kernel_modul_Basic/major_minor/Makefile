@@ -1,7 +1,7 @@
 # Hello world kernel module
 
 EXTRA_CFLAGS = -Wall
-obj-m = main.o
+obj-m = hello.o
 
 KDIR = /lib/modules/`uname -r`/build
 
