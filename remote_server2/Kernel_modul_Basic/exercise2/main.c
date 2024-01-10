@@ -14,8 +14,10 @@ typedef struct {
     struct class *m_class;
     struct cdev m_cdev;
     int size;
-    char *k_buff;
+    //char *k_buff;
 } m_foo_dev;
+
+char kernel_buff[40];
 
 m_foo_dev mdev;
 
@@ -62,7 +64,7 @@ static ssize_t m_read(struct file *filp, char __user *user_buf, size_t size, lof
     size_t bytes_to_read = min(size, (size_t)(mdev.size - *offset));
 
     // Copy data from kernel space to user space
-    if (copy_to_user(user_buf, mdev.k_buff + *offset, bytes_to_read) != 0) {
+    if (copy_to_user(user_buf, kernel_buff + *offset, bytes_to_read) != 0) {
         pr_err("Can not copy kernel to user\n");
         return -EFAULT;
     }
@@ -70,7 +72,7 @@ static ssize_t m_read(struct file *filp, char __user *user_buf, size_t size, lof
     // Update the offset and return the number of bytes read
     *offset += bytes_to_read;
 
-    kfree(mdev.k_buff);
+    //kfree(mdev.k_buff);
     return bytes_to_read;
 }
 
@@ -78,14 +80,15 @@ static ssize_t m_read(struct file *filp, char __user *user_buf, size_t size, lof
 static ssize_t m_write(struct file *filp, const char __user *user_buf, size_t size, loff_t *offset)
 {
     pr_info("System call write() called...!!!\n");
-    mdev.k_buff = kmalloc(size, GFP_KERNEL);
+    //mdev.k_buff = kmalloc(size, GFP_KERNEL);
 
-    if (copy_from_user(mdev.k_buff, user_buf, size)){
+    if (copy_from_user(kernel_buff, user_buf, size)){
         pr_err("Can not copy user to kernel\n");
-        kfree(mdev.k_buff);
+        //kfree(mdev.k_buff);
         return -EFAULT;
     }
-pr_info("Data from user space: %s\n", mdev.k_buff);
+
+    pr_info("Data from user space: %s\n", kernel_buff);
 
     mdev.size = size;
     //kfree(mdev.k_buff);
@@ -153,4 +156,4 @@ module_exit(Huy);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR(DRIVER_AUTHOR);
-MODULE_DESCRIPTION(DRIVER_DESC);
+MODULE_DESCRIPTION(DRIVER_DESC);  
