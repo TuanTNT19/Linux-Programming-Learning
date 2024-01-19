@@ -10,58 +10,61 @@
 #include <semaphore.h>
 
 int count = 1;
-int value ;
-pthread_t id1 , id2 ;
+int value;
+pthread_t id1, id2;
 sem_t *sema;
 
-static void *func1(void *para)
-{
+static void *func1(void *para) {
     printf("Thread 1 \n");
-    while(1)
-    {
-        printf("Value of count : %d\n", count );
-        if (count % 5 == 0)
-        {
-           sem_post(sema);
+    while (1) {
+        printf("Value of count : %d\n", count);
+        if (count % 5 == 0) {
+            if (sem_post(sema) == -1) {
+                perror("sem_post");
+                exit(EXIT_FAILURE);
+            }
         }
 
-        count ++;
+        count++;
         sleep(1);
     }
 }
 
-static void *func2(void *para)
-{
+static void *func2(void *para) {
     printf("Thread 2\n");
-    while(1)
-    {
-        sem_wait(sema);
+    while (1) {
+        if (sem_wait(sema) == -1) {
+            perror("sem_wait");
+            exit(EXIT_FAILURE);
+        }
         printf("Count reach check value\n");
-       // sleep(1);
     }
 }
 
-int main()
-{
-   // sem_t *sema;
+int main() {
+    sema = sem_open("/test_sema", O_CREAT , 0666, 0);
 
-    //sem_init(&sema, 0, 0);
-    sema = sem_open("/test_sema", O_CREAT | O_EXCL, 0666, 0);
-    sema = (sem_t *)malloc(sizeof(sem_t));
+    if (sema == SEM_FAILED) {
+        perror("sem_open");
+        exit(EXIT_FAILURE);
+    }
 
     sem_getvalue(sema, &value);
-    printf("intitial value of semaphore is : %d\n ", value);
-   // printf("Check \n");
+    printf("initial value of semaphore is : %d\n", value);
 
     pthread_create(&id1, NULL, &func1, NULL);
     pthread_create(&id2, NULL, &func2, NULL);
 
-    while(1);
-    
-   // sem_destroy(&sema);
-     sem_close(sema);
+    while (1) {
+        // Your main program logic here
+    }
 
-     sem_unlink("./test_sema");
+    sem_close(sema);
+
+    if (sem_unlink("/test_sema") == -1) {
+        perror("sem_unlink");
+        exit(EXIT_FAILURE);
+    }
 
     return 0;
 }
