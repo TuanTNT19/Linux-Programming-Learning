@@ -3,20 +3,25 @@
 EXTRA_CFLAGS = -Wall
 obj-m = main.o
 
-KDIR = /lib/modules/`uname -r`/build
+KDIR = /lib/modules/$(shell uname -r)/build
 
 all:
-	make -C $(KDIR) M=`pwd` modules
+    make -C $(KDIR) M=$(PWD) modules EXTRA_CFLAGS=$(EXTRA_CFLAGS)
 
 clean:
-	make -C $(KDIR) M=`pwd` clean
+    make -C $(KDIR) M=$(PWD) clean
+
 change:
-	sudo chmod 0666 /dev/my_device
+    sudo chmod 0666 /dev/my_device
+
 rm:
-	sudo rmmod main.ko
+    sudo rmmod main
+
 view:
-	dmesg | tail
+    dmesg | tail
+
 cat:
-	cat /dev/my_device
+    cat /dev/my_device
+
 run:
-	sudo insmod main.ko
+    sudo insmod main.ko

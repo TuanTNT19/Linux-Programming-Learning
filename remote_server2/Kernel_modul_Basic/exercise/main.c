@@ -85,7 +85,22 @@ static ssize_t m_write(struct file *filp, const char __user *user_buf, size_t si
         kfree(mdev.k_buff);
         return -EFAULT;
     }
-pr_info("Data from user space: %s\n", mdev.k_buff);
+    pr_info("Data from user space: %s\n", mdev.k_buff);
+//     if (strcmp(mdev.k_buff, "1") == 0)
+//     {
+//         pr_info("Led on\n");
+//     }
+
+//     else if (strcmp(mdev.k_buff, "2")==0){
+//         pr_info("LEd off \n");
+//     }
+
+//     else 
+//     {
+//         pr_err("error !\n");
+//     }
+    
+
 
     mdev.size = size;
     //kfree(mdev.k_buff);
