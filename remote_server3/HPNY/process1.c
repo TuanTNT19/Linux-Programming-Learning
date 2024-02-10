@@ -28,7 +28,8 @@ int main()
         read(fd2, buff_r, 50);
         printf("Message from process 2: %s\n", buff_r);
         close(fd2);
+        
     }
-    
+
     return 0;
 }
